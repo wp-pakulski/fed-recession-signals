@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Baza odtwarzana z data/raw przez notebooki 01-02 (2.7 MB)
+data/fed_cycles.db

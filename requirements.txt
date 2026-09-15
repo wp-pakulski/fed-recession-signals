@@ -1,0 +1,13 @@
+# pandas 3.0+ wymagany: w 2.x pct_change() domyslnie wypelnial luki w danych,
+# co zmienia realna stope Fed w miesiacach bez publikacji CPI (np. 2025-10)
+pandas>=3.0
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+matplotlib>=3.8
+seaborn>=0.13
+plotly>=5.18
+yfinance>=0.2.40
+requests>=2.31
+jupyter>=1.0
+nbconvert>=7.0
