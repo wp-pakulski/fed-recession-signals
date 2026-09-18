@@ -167,7 +167,7 @@ Model należy traktować z ostrożnością: uczony in-sample, na zaledwie 3 rece
 notebooks/
 ├── 01_data_collection.ipynb   # pobieranie danych z FRED i yfinance
 ├── 02_sqlite_queries.ipynb    # budowa bazy SQLite, widok v_master, 10 zapytań
-├── 03_dashboard.ipynb         # interaktywny dashboard Plotly (6 paneli)
+├── 03_dashboard.ipynb         # interaktywny dashboard Plotly (7 paneli)
 ├── 04_analysis.ipynb          # percentyle, momentum M2, test hipotezy
 └── 05_rozszerzenia.ipynb      # VIX, korelacje, timeline, logistic regression
 

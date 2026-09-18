@@ -6,6 +6,12 @@ Python + SQLite + Excel + Power BI.
 
 **Autor:** Wojciech Pakulski
 
+### 📊 [Interaktywny dashboard →](https://wp-pakulski.github.io/fed-recession-signals/reports/dashboard.html)
+
+Siedem paneli: S&P 500, krzywa dochodowości ze stopą Fed, podaż pieniądza M2, inflacja CPI
+wobec realnej stopy, bezrobocie z Sahm Rule, VIX oraz Recession Scorecard. Wykresy można
+przybliżać i odczytywać wartości punkt po punkcie.
+
 ---
 
 ## Co z tego wyszło
