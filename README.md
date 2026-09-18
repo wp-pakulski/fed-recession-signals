@@ -131,5 +131,3 @@ Model predykcyjny uczony jest in-sample na próbie zawierającej **trzy recesje*
 pięciu zmiennych objaśniających daje bardzo mało materiału. Jego odczyty należy traktować
 jako ilustrację metody, nie prognozę. Recession Scorecard i raport sygnałów są oparte na
 progach, nie na uczeniu, i są od tego zastrzeżenia niezależne.
-
-Część Power BI jest w trakcie budowy.
