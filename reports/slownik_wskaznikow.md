@@ -1,7 +1,10 @@
 # Słownik wskaźników makroekonomicznych
 
-**Projekt:** FedPieniadzRynki  
-**Data:** 2026-04-16
+**Projekt:** fed-recession-signals
+
+Słownik wyjaśnia, czym jest każdy wskaźnik i jak go czytać.
+Aktualne odczyty znajdziesz w [`sygnaly_recesyjne.md`](sygnaly_recesyjne.md),
+który powstaje ze świeżych danych przy każdym uruchomieniu skryptu.
 
 ---
 
@@ -16,7 +19,6 @@ Stopa po jakiej banki pożyczają sobie nawzajem pieniądze na jedną noc. Fed u
 | 2–4% | ✅ Dobra | Normalna, zdrowa gospodarka |
 | > 5% | ⚠️ Uwaga | Fed walczy z inflacją, kredyty drogie, gospodarka hamuje |
 
-**Aktualnie (marzec 2026):** 3.64% — Fed obniża stopy po cyklu podwyżek (był na 5.33% w 2023).
 
 ---
 
@@ -31,7 +33,6 @@ Różnica między oprocentowaniem obligacji 10-letnich i 2-letnich USA. Pokazuje
 | 0 do +0.5 pp | ⚠️ Uwaga | Krzywa płaska, rynek niepewny |
 | < 0 pp | 🔴 Zła | **Inwersja** — historyczny sygnał recesji |
 
-**Aktualnie (marzec 2026):** +0.53 pp — normalna, inwersja skończyła się we wrześniu 2024.
 
 ---
 
@@ -46,7 +47,6 @@ Ile pieniędzy jest w obiegu w USA — gotówka + depozyty bankowe + fundusze ry
 | > +15% | ⚠️ Zła | Dodruk pieniądza, ryzyko inflacji |
 | < 0% | ⚠️ Uwaga | Kurczenie się pieniądza, ryzyko deflacji/recesji |
 
-**Aktualnie (luty 2026):** +4.9% YoY — normalny poziom.
 
 ---
 
@@ -61,7 +61,6 @@ Ile pieniędzy jest w obiegu w USA — gotówka + depozyty bankowe + fundusze ry
 | Korekta -10% do -20% | ⚠️ Uwaga | Niepewność, ale bez paniki |
 | Spadek > -20% | 🔴 Zła | Bessie, często towarzyszy recesji |
 
-**Aktualnie (marzec 2026):** 6654 pkt — lekki spadek z 6929 w styczniu (-4%).
 
 ---
 
@@ -76,7 +75,6 @@ Oficjalny wskaźnik NBER (National Bureau of Economic Research). Wartość 1 = r
 | 0 | ✅ Dobra | Brak oficjalnej recesji |
 | 1 | 🔴 Zła | Oficjalna recesja |
 
-**Aktualnie (marzec 2026):** 0 — brak recesji.
 
 ---
 
@@ -92,7 +90,6 @@ Procent ludzi aktywnych zawodowo którzy szukają pracy ale jej nie mają.
 | > 6% | 🔴 Zła | Gospodarka zwalnia, firmy zwalniają |
 
 **Ważniejszy jest trend niż poziom.** Wzrost o 1pp w rok to sygnał ostrzegawczy.  
-**Aktualnie (marzec 2026):** 4.3% — rośnie (było 3.4% w 2023).
 
 ---
 
@@ -107,7 +104,6 @@ Wartość wszystkich dóbr i usług wyprodukowanych w USA, skorygowana o inflacj
 | 0 do +2% | ⚠️ Neutralna | Gospodarka hamuje |
 | < 0% przez 2 kwartały | 🔴 Zła | Techniczna definicja recesji |
 
-**Aktualnie:** Dane do Q3 2025 (opóźnienie kwartalne).
 
 ---
 
@@ -123,7 +119,6 @@ Indeks cen konsumenckich — mierzy drożyznę w codziennym życiu (jedzenie, mi
 | > 5% | 🔴 Zła | Wysoka inflacja, siła nabywcza spada |
 | < 0% | 🔴 Zła | Deflacja — też groźna (spirala deflacyjna) |
 
-**Aktualnie (marzec 2026):** ~2.9% YoY — wraca do normy po szczycie z 2022.
 
 ---
 
@@ -138,7 +133,6 @@ Liczba osób które w danym tygodniu złożyły wniosek o zasiłek po raz pierws
 | 250 000 – 300 000 | ⚠️ Uwaga | Wzrost zwolnień, warto obserwować |
 | > 300 000 | 🔴 Zła | Masowe zwolnienia, recesja prawdopodobna |
 
-**Aktualnie (kwiecień 2026):** 212 000 — dobry poziom.
 
 ---
 
@@ -153,7 +147,6 @@ Liczba etatów w USA poza sektorem rolnym. Jeden z najważniejszych raportów mi
 | 0 do +150 000 | ⚠️ Neutralna | Rynek pracy zwalnia |
 | < 0 przez 2 miesiące | 🔴 Zła | Gospodarka kurczy się, recesja blisko |
 
-**Aktualnie (marzec 2026):** +178 000 — dobry wynik, ale zmienny.
 
 ---
 
@@ -168,7 +161,6 @@ Ile produkują fabryki, kopalnie i elektrownie w USA. Mierzy realną aktywność
 | 0 do +2% | ⚠️ Neutralna | Produkcja stoi w miejscu |
 | < 0% | 🔴 Zła | Przemysł kurczy się — klasyczny sygnał recesji |
 
-**Aktualnie (marzec 2026):** +0.74% YoY — bardzo blisko zera, słaby sygnał.
 
 ---
 
@@ -183,7 +175,6 @@ Ile produkują fabryki, kopalnie i elektrownie w USA. Mierzy realną aktywność
 | 0 do +3% | ⚠️ Neutralna | Konsument zwalnia |
 | < 0% | 🔴 Zła | Konsument się wycofuje — recesja blisko |
 
-**Aktualnie (luty 2026):** +3.48% YoY — jeden z mocniejszych sygnałów pozytywnych.
 
 ---
 
@@ -198,7 +189,6 @@ Liczba wydanych pozwoleń na budowę nowych domów. Wyprzedza realną aktywnoś�
 | -10% do 0% | ⚠️ Uwaga | Budownictwo hamuje |
 | < -10% | 🔴 Zła | Budownictwo się załamuje — recesja za 6–12 miesięcy |
 
-**Aktualnie (styczeń 2026):** -5.07% YoY — sygnał ostrzegawczy.
 
 ---
 
@@ -214,7 +204,6 @@ Różnica między oprocentowaniem obligacji ryzykownych firm (śmieciowych) a be
 | > 6% | 🔴 Zła | Panika kredytowa, firmy mają problem z finansowaniem |
 | > 10% | 🔴🔴 Kryzys | Jak podczas GFC 2008 (był ~20%) |
 
-**Aktualnie (kwiecień 2026):** 3.00% — rynki finansowe spokojne.
 
 ---
 
@@ -230,7 +219,6 @@ Procent banków które **zaostrzają** warunki kredytowania dla dużych firm. Da
 | > 30% | 🔴 Zła | Kredyt kruszeje — firmy nie mogą się finansować |
 | > 50% | 🔴🔴 Kryzys | Jak podczas GFC 2008 i COVID 2020 |
 
-**Aktualnie (Q4 2025):** 5.3% — minimalne zaostrzenie, sytuacja normalna.
 
 ---
 
@@ -246,7 +234,6 @@ Wzór stworzony przez ekonomistkę Claudię Sahm z Fed. Mierzy wzrost bezrobocia
 | 0.3 – 0.5 | ⚠️ Uwaga | Bezrobocie rośnie, obserwuj |
 | ≥ 0.5 | 🔴 Zła | **Recesja w toku** — historycznie 100% skuteczności |
 
-**Aktualnie (marzec 2026):** 0.33 — strefa uwagi, ale bez alarmu.
 
 ---
 

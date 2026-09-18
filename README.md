@@ -95,6 +95,10 @@ excel/        skonsolidowany arkusz zbudowany w Power Query
 powerbi/      model danych i raport .pbix
 ```
 
+Arkusz Excel i model Power BI zbudowano na danych z kwietnia 2026 i nie były od tego
+czasu odświeżane - liczby w nich pochodzą z tamtego pobrania. Część analityczna
+(notebooki, raporty, wykresy) korzysta z danych aktualnych.
+
 Pełne omówienie metody i wyników: **[reports/writeup.md](reports/writeup.md)**
 Wyjaśnienie każdego wskaźnika: [reports/slownik_wskaznikow.md](reports/slownik_wskaznikow.md)
 
