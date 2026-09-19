@@ -20,6 +20,7 @@ przybliżać i odczytywać wartości punkt po punkcie.
 że tani pieniądz napędza S&P500. Test t-Welcha na 417 miesiącach: średni zwrot 12-miesięczny
 wynosi **10,1% w obu reżimach**, `t = -0,009`, **`p = 0,993`**. Różnica jest nie do odróżnienia
 od zera, a mediana jest nawet nieco wyższa przy dodatniej realnej stopie.
+Hipoteza, poziom istotności i naruszone założenie testu: [Metoda i walidacja](#metoda-i-walidacja).
 
 **2. Rekordowa inwersja krzywej nie zapowiedziała recesji.** Spread 10Y-2Y był ujemny przez
 **26 kolejnych miesięcy** (lipiec 2022 - sierpień 2024) - najdłużej w całej analizowanej
@@ -35,7 +36,7 @@ wobec 1,05) i pozwolenia budowlane (-5,1% wobec +4,5%).
 **4. Model uczony in-sample potrafi mylić fazę cyklu z przyczyną.** Regresja logistyczna
 osiąga ROC AUC **0,819**, ale współczynnik przy bezrobociu jest **ujemny**: model odczytuje
 wysokie bezrobocie jako „dołek już za nami", bo rośnie ono najmocniej *w trakcie* recesji,
-a zmienna objaśniana pyta o *następne* 12 miesięcy. Przy trzech recesjach w próbie nie ma
+a zmienna objaśniana pyta o *następne* 12 miesięcy. Przy czterech recesjach w próbie nie ma
 materiału, by to rozróżnić - i dlatego model jest w projekcie opisany jako ilustracja,
 nie prognoza.
 
@@ -125,9 +126,70 @@ Dwa ograniczenia warte odnotowania:
 
 ---
 
+## Metoda i walidacja
+
+Cztery wnioski powyżej opierają się na różnych narzędziach i mają różną siłę dowodową.
+Poniżej wprost, które jest które.
+
+**Test hipotezy (wniosek 1).** Test t Welcha dla dwóch prób o nierównych wariancjach,
+`scipy.stats.ttest_ind(equal_var=False)`, poziom istotności α = 0,05.
+
+- H₀: średni 12-miesięczny zwrot S&P500 jest taki sam w miesiącach z ujemną
+  i dodatnią realną stopą Fed
+- H₁: przy ujemnej realnej stopie zwrot jest wyższy
+- Próby: n = 197 (realna stopa < 0) wobec n = 220 (>= 0), okres 1990-2026
+- Wynik: średnia 10,1% wobec 10,1%; mediana 11,8% wobec 12,2%;
+  odchylenie 14,2 wobec 17,0; `t = -0,009`, `p = 0,9927`
+- Decyzja: brak podstaw do odrzucenia H₀
+
+Wariant Welcha, nie Studenta, bo odchylenia w grupach różnią się o blisko 3 pp -
+zakładanie równych wariancji byłoby tu nieuprawnione.
+
+**Założenie, które ten test narusza.** Zwroty forward 12M na danych miesięcznych
+nakładają się na siebie w 11 z 12 miesięcy, więc 417 obserwacji nie jest niezależnych -
+efektywnie jest ich około 35. Nakładanie zaniża wariancję, a więc zawyża istotność.
+Obciążenie działa zatem przeciw wykryciu efektu jako istotnego, a nie na jego rzecz:
+gdyby test pokazał różnicę, byłaby podejrzana. Pokazał `p = 0,993`, więc wniosek
+„różnicy nie widać" jest wobec tego problemu odporny. Test na nienakładających się
+okresach rocznych zostawiłby 35 obserwacji - za mało, by cokolwiek wykryć, i to jest
+druga strona tego samego ograniczenia.
+
+**Korelacja (heatmapa, 11 wskaźników).** Pearson na oknie 1990-2026, mieszanka
+poziomów i dynamik rocznych. Najsilniejsze pary: stopa Fed x realna stopa r = +0,77,
+spread HY x VIX r = +0,73, krzywa dochodowości x bezrobocie r = +0,71.
+Żaden z 11 wskaźników nie ma wszystkich |r| < 0,3, czyli nie ma tu sygnału niezależnego
+od pozostałych. To wynik opisowy, nie test: część korelacji na poziomach jest zawyżona
+wspólnym trendem, a stacjonarności serii nie badałem (brak testu ADF).
+
+**Model klasyfikacyjny (wniosek 4).** Regresja logistyczna, `StandardScaler`,
+`class_weight='balanced'`, 416 miesięcy, zmienna objaśniana = recesja w ciągu
+następnych 12 miesięcy (63 przypadki, 15,1% próby).
+
+- ROC AUC 0,819, **liczone in-sample** - bez podziału na zbiór uczący i testowy
+  i bez walidacji krzyżowej szeregów czasowych
+- dla klasy „recesja": czułość 0,73, precyzja 0,33 - wyrównanie wag klas kupuje
+  wykrywalność kosztem fałszywych alarmów
+- współczynniki standaryzowane nie są interpretowalne przyczynowo: przy korelacjach
+  rzędu 0,7 między zmiennymi objaśniającymi znaki rozkładają się arbitralnie,
+  co widać na ujemnym współczynniku przy bezrobociu (wniosek 4)
+
+AUC 0,819 in-sample nie jest miarą zdolności prognostycznej. Uczciwa ocena wymaga
+podziału po czasie, a przy czterech recesjach w próbie każdy podział zostawia
+w zbiorze testowym najwyżej jedną - dlatego model jest w projekcie ilustracją metody,
+nie prognozą.
+
+**Progi wskaźników (wniosek 3).** Kalibracja na rozkładzie historycznym: porównanie
+median w oknie 12 miesięcy przed recesją z pozostałymi okresami. Bez testu istotności -
+przy tak małej liczbie recesji i ośmiu wskaźnikach kontrola porównań wielokrotnych
+zabrałaby i tak całą moc. Ten wniosek traktować jako obserwację z danych, nie wynik testu.
+
+---
+
 ## Ograniczenia
 
-Model predykcyjny uczony jest in-sample na próbie zawierającej **trzy recesje**, co przy
-pięciu zmiennych objaśniających daje bardzo mało materiału. Jego odczyty należy traktować
+Model predykcyjny uczony jest in-sample na próbie zawierającej **cztery recesje**, z których
+najstarsza (1990-1991) wchodzi do niej tylko częściowo, bo okno 12 miesięcy przed jej
+początkiem wychodzi poza zakres danych. Przy pięciu zmiennych objaśniających to bardzo mało
+materiału. Jego odczyty należy traktować
 jako ilustrację metody, nie prognozę. Recession Scorecard i raport sygnałów są oparte na
 progach, nie na uczeniu, i są od tego zastrzeżenia niezależne.

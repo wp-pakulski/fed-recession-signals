@@ -73,9 +73,10 @@ Realna stopa Fed (FEDFUNDS minus CPI YoY) wynosi +0.28 pp w sierpniu 2026. Po po
 
 VIX (indeks strachu) dodany jako 17. wskaźnik. Aktualnie **15.7** (36. percentyl historyczny) - rynek jest spokojniejszy niż w dwóch trzecich miesięcy od 1990 roku i bardzo daleko od paniki (GFC: 63, COVID: 58). VIX wykazuje silną korelację ze spreadem HY (r=+0.73) i ujemną z S&P500 YoY (r=-0.48).
 
-### 8. Korelacje wskaźników — niezależność sygnałów
+### 8. Korelacje wskaźników - redundancja sygnałów
 
-Analiza korelacji 11 kluczowych wskaźników ujawniła:
+Analiza korelacji 11 kluczowych wskaźników ujawniła, że **żaden z nich nie jest niezależny
+od pozostałych** - każdy ma z czymś korelację o module co najmniej 0,3:
 - **Najsilniejsze pary:** Stopa Fed × Realna stopa (r=+0.77), S&P500 YoY × Spread HY (r=-0.62), VIX × Spread HY (r=+0.73)
 - **Wniosek:** Spread HY i VIX niosą podobną informację (strach rynkowy) — w scorecardzie wystarczy jeden z nich. Yield Curve i bezrobocie (r=+0.71) też są powiązane, ale z różnym opóźnieniem czasowym. Yield Curve × S&P500 YoY (r=+0.52) - stroma krzywa idzie w parze z hossą, co wzmacnia interpretację krzywej jako wskaźnika oczekiwań, a nie tylko sygnału recesji.
 
@@ -106,7 +107,7 @@ Model regresji logistycznej przewidujący prawdopodobieństwo recesji w ciągu 1
 bezrobociu jest odwrotny do intuicji i to najciekawszy wynik modelu: bezrobocie rośnie
 najsilniej *w trakcie* recesji, a zmienna objaśniana pyta o recesję w ciągu *następnych*
 12 miesięcy. Model odczytuje więc wysokie bezrobocie jako „dołek już za nami". Łapie fazę
-cyklu, nie zależność przyczynową - przy trzech recesjach w próbie nie ma materiału, by je
+cyklu, nie zależność przyczynową - przy czterech recesjach w próbie nie ma materiału, by je
 rozróżnić.
 
 **Ostatni odczyt w próbie (sierpień 2025):** P(recesja w 12M) = **49.1%**
@@ -122,11 +123,12 @@ poza próbą, możliwa do weryfikacji dopiero w lipcu 2027.
 > pokazuje 0 z 4, bo żaden wskaźnik nie przekroczył progu alarmowego. Model pokazuje
 > 55%, mimo że sytuacja makro się poprawiła - bo spadek bezrobocia z 4.5% do 4.1% przy
 > ujemnym współczynniku *podnosi* jego odczyt. To dobra ilustracja, dlaczego modelu
-> uczonego in-sample na trzech recesjach nie należy czytać jak prognozy. Scorecard
+> uczonego in-sample na czterech recesjach nie należy czytać jak prognozy. Scorecard
 > odpowiada na pytanie „czy coś przekroczyło próg", model - „jak ten układ zmiennych
 > wyglądał historycznie".
 
-Model należy traktować z ostrożnością: uczony in-sample, na zaledwie 3 recesjach.
+Model należy traktować z ostrożnością: uczony in-sample, na zaledwie 4 recesjach,
+z których najstarsza wchodzi do próby tylko częściowo.
 
 ---
 
