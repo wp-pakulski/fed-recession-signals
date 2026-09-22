@@ -18,7 +18,7 @@ przybliżać i odczytywać wartości punkt po punkcie.
 
 **1. Ujemna realna stopa Fed nie daje wyższych zwrotów z giełdy.** Popularna teza mówi,
 że tani pieniądz napędza S&P500. Test t-Welcha na 417 miesiącach: średni zwrot 12-miesięczny
-wynosi **10,1% w obu reżimach**, `t = -0,009`, **`p = 0,993`**. Różnica jest nie do odróżnienia
+wynosi **10,1% w obu reżimach**, `t = -0,008`, **`p = 0,993`**. Różnica jest nie do odróżnienia
 od zera, a mediana jest nawet nieco wyższa przy dodatniej realnej stopie.
 Hipoteza, poziom istotności i naruszone założenie testu: [Metoda i walidacja](#metoda-i-walidacja).
 
@@ -56,17 +56,27 @@ python scripts/sygnaly_recesyjne.py
 Progi nie są dobrane na wyczucie, tylko na rozkładzie historycznym 1990-2026: **UWAGA** gdy
 wskaźnik trafia w najgorsze 25% obserwacji, **ALARM** w najgorsze 10%.
 
-Backtest na czterech recesjach:
+Backtest liczony przez `backtest()` w tym samym skrypcie, na trzech recesjach:
 
-| Okres | Średnia liczba zapalonych flag |
-|---|---|
-| 12 miesięcy przed recesją | **2,35** |
-| w trakcie recesji | **4,86** |
-| pozostałe miesiące | **1,37** |
+| Okres | Średnio flag | Maksimum | Miesięcy |
+|---|---|---|---|
+| 12 miesięcy przed recesją | **2,56** | 4 | 36 |
+| w trakcie recesji | **5,46** | 7 | 28 |
+| pozostałe miesiące | **1,51** | 7 | 291 |
 
-Wskaźnik zapalił się przed każdą z czterech recesji w próbie. Ostatni wyraźny sygnał to
-listopad 2025 (4 flagi); od stycznia 2026 odczyty wahają się między 0 a 2, a dwa ostatnie
-miesiące to 0.
+Liczone wyłącznie na miesiącach z kompletem ośmiu wskaźników. To ogranicza próbę
+do okresu od grudnia 1996, bo wtedy zaczyna się seria spreadu HY - a tym samym
+do trzech recesji, nie czterech. Okno przed recesją 1990-1991 nie ma ani jednego
+miesiąca z pełnymi danymi.
+
+**Średnia separuje reżimy, maksimum już nie.** Spokojne miesiące też dochodzą do 7 flag,
+a te najwyższe odczyty wypadają **po** recesjach, nie przed nimi: pięć miesięcy tuż po
+GFC (2009), trzy po dot-comie, plus skupisko w 2024 przy inwersji, która nie skończyła
+się recesją. Ten zestaw wskaźników jest bardziej opóźniony niż wyprzedzający i tak
+trzeba go czytać.
+
+Ostatni wyraźny sygnał to listopad 2025 (4 flagi). Od stycznia 2026 odczyty mieszczą się
+między 0 a 2; ostatni miesiąc z kompletem danych to lipiec 2026 z jedną flagą.
 
 ---
 
@@ -76,16 +86,17 @@ miesiące to 0.
 pip install -r requirements.txt
 ```
 
-Notebooki uruchamia się **w kolejności 01 → 02 → 05 → 03 → 04**. Nie jest to kolejność
-numeryczna: notebook 03 korzysta z indeksu VIX, który trafia do bazy dopiero w notebooku 05.
+Notebooki uruchamia się **w kolejności numerycznej 01 → 02 → 03 → 04 → 05**.
+Do bazy zapisują wyłącznie 01 i 02, pozostałe trzy tylko z niej czytają - dzięki temu
+wynik nie zależy od tego, w jakiej kolejności je odpalisz.
 
 | Notebook | Co robi |
 |---|---|
-| `01_data_collection` | pobiera 16 serii z FRED oraz S&P500 i VIX z Yahoo Finance |
-| `02_sqlite_queries` | buduje bazę SQLite i widok `v_master` |
-| `05_rozszerzenia` | VIX, korelacje, timeline inwersji, regresja logistyczna |
+| `01_data_collection` | pobiera 15 serii z FRED oraz S&P500 i VIX z Yahoo Finance |
+| `02_sqlite_queries` | buduje bazę SQLite i widok `v_master`, 10 zapytań analitycznych |
 | `03_dashboard` | interaktywny dashboard Plotly, Recession Scorecard |
 | `04_analysis` | percentyle, momentum M2, test hipotezy |
+| `05_rozszerzenia` | VIX, korelacje, timeline inwersji, regresja logistyczna |
 
 Baza `data/fed_cycles.db` nie jest wersjonowana - powstaje z plików w `data/raw/`.
 
@@ -96,7 +107,7 @@ Baza `data/fed_cycles.db` nie jest wersjonowana - powstaje z plików w `data/raw
 ```
 notebooks/    pięć notebooków, pełny łańcuch od pobrania danych do analizy
 scripts/      sygnaly_recesyjne.py - generator raportu
-data/raw/     18 plików CSV: dane źródłowe z FRED i Yahoo Finance
+data/raw/     17 plików CSV: dane źródłowe z FRED i Yahoo Finance
 reports/      writeup, raport sygnałów, słownik wskaźników, 9 wykresów, dashboard HTML
 excel/        skonsolidowany arkusz zbudowany w Power Query
 powerbi/      model danych i raport .pbix
@@ -118,9 +129,12 @@ Finance przez `yfinance` dla S&P500 i VIX.
 
 Dwa ograniczenia warte odnotowania:
 
-- FRED skraca historię serii licencjonowanych przy pobraniu (indeks ICE BofA do 3 lat,
-  S&P500 do 10). Notebook 01 dopisuje nowe dane do istniejących plików w `data/raw/`,
-  zamiast je nadpisywać - dlatego CSV są częścią repozytorium.
+- FRED skraca historię serii licencjonowanych przy pobraniu - indeks ICE BofA oddaje
+  tylko 3 ostatnie lata. Notebook 01 dopisuje nowe dane do istniejących plików
+  w `data/raw/`, zamiast je nadpisywać - dlatego CSV są częścią repozytorium.
+- S&P500 z FRED miał ten sam problem (10 lat zamiast 36), dlatego indeks i VIX pobierane
+  są z Yahoo Finance, gdzie pełna historia przychodzi przy każdym odświeżeniu. Razem:
+  15 serii z FRED, 2 z Yahoo, 17 serii w bazie.
 - Seria `USSLIND` (wskaźnik wyprzedzający) kończy się w lutym 2020 - została wycofana
   przez FRED i nie da się jej odświeżyć.
 
@@ -139,7 +153,7 @@ Poniżej wprost, które jest które.
 - H₁: przy ujemnej realnej stopie zwrot jest wyższy
 - Próby: n = 197 (realna stopa < 0) wobec n = 220 (>= 0), okres 1990-2026
 - Wynik: średnia 10,1% wobec 10,1%; mediana 11,8% wobec 12,2%;
-  odchylenie 14,2 wobec 17,0; `t = -0,009`, `p = 0,9927`
+  odchylenie 14,2 wobec 17,0; `t = -0,008`, `p = 0,9934`
 - Decyzja: brak podstaw do odrzucenia H₀
 
 Wariant Welcha, nie Studenta, bo odchylenia w grupach różnią się o blisko 3 pp -

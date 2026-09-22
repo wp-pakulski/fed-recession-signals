@@ -1,6 +1,6 @@
 # Przegląd sygnałów recesyjnych
 
-**Wygenerowano:** 2026-09-15  
+**Wygenerowano:** 2026-09-22  
 **Werdykt: ✅ NISKIE ryzyko recesji**
 
 Zapalone flagi: **0 z 8**, w tym alarmy: **0**
@@ -18,6 +18,22 @@ Zapalone flagi: **0 z 8**, w tym alarmy: **0**
 
 Progi wyznaczone na rozkładzie historycznym 1990-2026: UWAGA gdy wskaźnik
 trafia w najgorsze 25% obserwacji, ALARM w najgorsze 10%.
+
+## Backtest 1996-2026
+
+| Reżim | Średnio flag | Maksimum | Miesięcy |
+|---|---|---|---|
+| 12 miesięcy przed recesją | **2.56** | 4 | 36 |
+| w trakcie recesji | **5.46** | 7 | 28 |
+| pozostałe miesiące | **1.51** | 7 | 291 |
+
+Liczone tylko na miesiącach, w których wszystkie osiem wskaźników miało dane.
+Ogranicza to backtest do okresu od grudnia 1996 i trzech recesji - spread HY
+z indeksu ICE BofA zaczyna się dopiero wtedy.
+
+Średnia separuje reżimy, maksimum już nie: spokojne miesiące też dochodzą
+do 7 flag, a najwyższe odczyty wypadają **po** recesjach, nie przed nimi.
+To zachowanie wskaźnika opóźnionego i granica tego, co ten zestaw potrafi.
 
 ## Dane źródłowe
 

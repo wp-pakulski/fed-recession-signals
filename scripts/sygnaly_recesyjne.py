@@ -22,6 +22,11 @@ PROGI = [
 ]
 
 IKONY = {'OK': '✅', 'UWAGA': '⚠️', 'ALARM': '🔴', 'BRAK': '❔'}
+ETYKIETY_REZIMOW = {
+    'przed':   '12 miesięcy przed recesją',
+    'recesja': 'w trakcie recesji',
+    'spokoj':  'pozostałe miesiące',
+}
 IKONY_WERDYKTU = {'NISKIE': '✅', 'UMIARKOWANE': '⚠️', 'WYSOKIE': '🔴'}
 
 
@@ -101,6 +106,44 @@ def werdykt(wyniki: list) -> tuple:
 
     return nazwa, flagi, alarmy
 
+def policz_flagi_historycznie(df: pd.DataFrame) -> tuple:
+    """Dla każdego miesiąca zwraca (liczba flag, czy wszystkie 8 wskaźników miało dane)."""
+    oceny = pd.DataFrame(index=df.index)
+    for kolumna, _, kierunek, uwaga, alarm in PROGI:
+        # pd.isna jest konieczne: ocen() porównuje wartość z progiem, a każde
+        # porównanie z NaN daje False, więc brak danych wyszedłby jako 'OK'
+        oceny[kolumna] = df[kolumna].map(
+            lambda v, k=kierunek, u=uwaga, a=alarm: ocen(None if pd.isna(v) else v, k, u, a)
+        )
+    zapalone = oceny.isin(['UWAGA', 'ALARM']).sum(axis=1)
+    kompletne = (oceny != 'BRAK').all(axis=1)
+    return zapalone, kompletne
+
+def przypisz_rezim(df: pd.DataFrame, okno: int = 12) -> pd.Series:
+    """Oznacza każdy miesiąc jako 'recesja', 'przed' (okno mies. przed startem) albo 'spokoj'."""
+    usrec = df['usrec'].fillna(0)
+    poczatki = df.index[(usrec == 1) & (usrec.shift(1) == 0)]
+    rezim = pd.Series('spokoj', index=df.index)
+    for p in poczatki:
+        rezim.iloc[max(0, p - okno):p] = 'przed'
+    rezim[usrec == 1] = 'recesja'      # recesja ma pierwszeństwo nad oknem "przed"
+    return rezim
+
+def backtest(df: pd.DataFrame, okno: int = 12) -> pd.DataFrame:
+    """Średnia i maksymalna liczba flag w trzech reżimach.
+
+    Liczone tylko na miesiącach z kompletem ośmiu wskaźników. Ogranicza to próbę
+    do okresu od grudnia 1996 (początek serii spreadu HY) i do trzech recesji -
+    okno przed recesją 1990-1991 nie ma ani jednego miesiąca z pełnymi danymi.
+    """
+    zapalone, kompletne = policz_flagi_historycznie(df)
+    tab = pd.DataFrame({
+        'flagi': zapalone.where(kompletne),
+        'rezim': przypisz_rezim(df, okno),
+    }).dropna(subset=['flagi'])
+    wynik = tab.groupby('rezim')['flagi'].agg(srednia='mean', maks='max', n='count')
+    return wynik.reindex(['przed', 'recesja', 'spokoj'])
+
 def formatuj_wartosc(wartosc) -> str:
     """206000.0 -> '206 000', 0.3962 -> '+0.40', None -> 'brak danych'."""
     if wartosc is None:
@@ -109,7 +152,7 @@ def formatuj_wartosc(wartosc) -> str:
         return f'{wartosc:,.0f}'.replace(',', ' ')
     return f'{wartosc:+.2f}'
 
-def zbuduj_raport(wyniki: list, nazwa: str, flagi: int, alarmy: int) -> str:
+def zbuduj_raport(wyniki: list, nazwa: str, flagi: int, alarmy: int, bt: pd.DataFrame) -> str:
     """Składa treść raportu w markdown."""
     dzis = pd.Timestamp.today().strftime('%Y-%m-%d')
     linie = [
@@ -134,6 +177,24 @@ def zbuduj_raport(wyniki: list, nazwa: str, flagi: int, alarmy: int) -> str:
         'Progi wyznaczone na rozkładzie historycznym 1990-2026: UWAGA gdy wskaźnik',
         'trafia w najgorsze 25% obserwacji, ALARM w najgorsze 10%.',
         '',
+        '## Backtest 1996-2026',
+        '',
+        '| Reżim | Średnio flag | Maksimum | Miesięcy |',
+        '|---|---|---|---|',
+        *[
+            f'| {ETYKIETY_REZIMOW[r]} | **{bt.loc[r, "srednia"]:.2f}** | '
+            f'{int(bt.loc[r, "maks"])} | {int(bt.loc[r, "n"])} |'
+            for r in bt.index if pd.notna(bt.loc[r, 'srednia'])
+        ],
+        '',
+        'Liczone tylko na miesiącach, w których wszystkie osiem wskaźników miało dane.',
+        'Ogranicza to backtest do okresu od grudnia 1996 i trzech recesji - spread HY',
+        'z indeksu ICE BofA zaczyna się dopiero wtedy.',
+        '',
+        'Średnia separuje reżimy, maksimum już nie: spokojne miesiące też dochodzą',
+        'do 7 flag, a najwyższe odczyty wypadają **po** recesjach, nie przed nimi.',
+        'To zachowanie wskaźnika opóźnionego i granica tego, co ten zestaw potrafi.',
+        '',
         '## Dane źródłowe',
         '',
         '- FRED, baza `data/fed_cycles.db`',
@@ -148,5 +209,9 @@ if __name__ == '__main__':
     df = policz_wskazniki(wczytaj_dane())
     wyniki = zbierz_odczyty(df)
     nazwa, flagi, alarmy = werdykt(wyniki)
-    zapisz(zbuduj_raport(wyniki, nazwa, flagi, alarmy))
+    bt = backtest(df)
+    zapisz(zbuduj_raport(wyniki, nazwa, flagi, alarmy, bt))
     print(f'{RAPORT.name}: {nazwa}, flagi {flagi}, alarmy {alarmy}')
+    print(f'backtest: przed {bt.loc["przed", "srednia"]:.2f}, '
+          f'recesja {bt.loc["recesja", "srednia"]:.2f}, '
+          f'spokoj {bt.loc["spokoj", "srednia"]:.2f}')

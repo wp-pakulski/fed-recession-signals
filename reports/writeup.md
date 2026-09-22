@@ -1,4 +1,4 @@
-# Fed, Pieniądz i Rynki — analiza cykli monetarnych 1990–2026
+# Fed, Pieniądz i Rynki - analiza cykli monetarnych 1990-2026
 
 **Autor:** Wojciech Pakulski  
 **Data:** Wrzesień 2026  
@@ -8,41 +8,41 @@
 
 ## Cel projektu
 
-Celem było zbadanie, jak polityka monetarna Rezerwy Federalnej — zmiany stóp procentowych i podaży pieniądza — wpływa na rynki finansowe i gospodarkę realną w perspektywie historycznej (1990–2026). Projekt łączy analizę danych makroekonomicznych z testowaniem hipotezy statystycznej.
+Celem było zbadanie, jak polityka monetarna Rezerwy Federalnej - zmiany stóp procentowych i podaży pieniądza - wpływa na rynki finansowe i gospodarkę realną w perspektywie historycznej (1990-2026). Projekt łączy analizę danych makroekonomicznych z testowaniem hipotezy statystycznej.
 
 ---
 
 ## Dane i metodologia
 
 **Źródła:**
-- FRED (Federal Reserve Bank of St. Louis) — 16 serii makroekonomicznych pobrane przez API
-- Yahoo Finance (`yfinance`) — historyczne ceny S&P500 (`^GSPC`) i VIX (`^VIX`) od 1990
+- FRED (Federal Reserve Bank of St. Louis) - 15 serii makroekonomicznych pobranych przez API
+- Yahoo Finance (`yfinance`) - historyczne ceny S&P500 (`^GSPC`) i VIX (`^VIX`) od 1990
 
-**Baza danych:** SQLite (`fed_cycles.db`) z widokiem `v_master` agregującym 17 wskaźników miesięcznie — 441 obserwacji, styczeń 1990 - wrzesień 2026.
+**Baza danych:** SQLite (`fed_cycles.db`) z widokiem `v_master` agregującym 17 wskaźników miesięcznie - 441 obserwacji, styczeń 1990 - wrzesień 2026.
 
 **Wskaźniki:** FEDFUNDS, M2, S&P500, yield curve (T10Y2Y), inflacja CPI, bezrobocie, PKB, tygodniowe wnioski o zasiłek (ICSA), zatrudnienie (PAYEMS), produkcja przemysłowa (INDPRO), sprzedaż detaliczna, pozwolenia budowlane, spread HY, warunki kredytowe, wskaźnik wyprzedzający LEI, **VIX** (indeks zmienności/strachu).
 
-**Kolejność uruchamiania notebooków:** 01 → 02 → 05 → 03 → 04. Notebook 03 korzysta z VIX, który trafia do bazy dopiero w 05.
+**Kolejność uruchamiania notebooków:** 01 → 02 → 03 → 04 → 05. Do bazy zapisują tylko 01 i 02, pozostałe czytają - kolejność nie wpływa na wyniki.
 
 ---
 
 ## Wyniki
 
-### 1. Cykl zacieśnienia 2022–2023 — najszybsza podwyżka od dekad
+### 1. Cykl zacieśnienia 2022-2023 - najszybsza podwyżka od dekad
 
-Fed podniósł stopę z 0.08% (luty 2022) do **5.33%** (sierpień 2023) — 525 punktów bazowych w 16 miesięcy, najszybsze zacieśnienie od lat 80. Do sierpnia 2026 stopa obniżyła się do **3.63%**.
+Fed podniósł stopę z 0.08% (luty 2022) do **5.33%** (sierpień 2023) - 525 punktów bazowych w 16 miesięcy, najszybsze zacieśnienie od lat 80. Do sierpnia 2026 stopa obniżyła się do **3.63%**.
 
-Inflacja CPI osiągnęła szczyt **9.0% w czerwcu 2022** (najwyżej od 1981), a do sierpnia 2026 spadła do **3.4%** — powyżej celu 2%. W ostatnich miesiącach spadek inflacji wyhamował - odczyt wrócił lekko w górę.
+Inflacja CPI osiągnęła szczyt **9.0% w czerwcu 2022** (najwyżej od 1981), a do sierpnia 2026 spadła do **3.4%** - powyżej celu 2%. W ostatnich miesiącach spadek inflacji wyhamował - odczyt wrócił lekko w górę.
 
-### 2. Inwersja krzywej dochodowości — rekordowe 26 miesięcy
+### 2. Inwersja krzywej dochodowości - rekordowe 26 miesięcy
 
-Spread 10Y–2Y był ujemny od **lipca 2022 do sierpnia 2024** — przez **26 kolejnych miesięcy**. To najdłuższa inwersja w analizowanej historii (1990–2026). Inwersja krzywej jest tradycyjnie uważana za sygnał recesji, jednak:
+Spread 10Y-2Y był ujemny od **lipca 2022 do sierpnia 2024** - przez **26 kolejnych miesięcy**. To najdłuższa inwersja w analizowanej historii (1990-2026). Inwersja krzywej jest tradycyjnie uważana za sygnał recesji, jednak:
 
-> Pomimo rekordowej inwersji, recesja (wg NBER/USREC) **nie wystąpiła** w latach 2023–2026. Gospodarka spowolniła, ale nie skurczyła się.
+> Pomimo rekordowej inwersji, recesja (wg NBER/USREC) **nie wystąpiła** w latach 2023-2026. Gospodarka spowolniła, ale nie skurczyła się.
 
 ### 3. Eksplozja i kontrakcja M2
 
-Pandemia wywołała bezprecedensowy wzrost podaży pieniądza: M2 YoY osiągnęło **+26.8% w lutym 2021** — efekt bezpośredniego zastrzyku fiskalnego i zerowych stóp. Następnie Fed ograniczył bilans, a M2 YoY spadło do **-4.6% w kwietniu 2023** — pierwszy historyczny spadek podaży pieniądza od dekad. W lipcu 2026 M2 YoY wynosi **+5.4%**, wracając do normy.
+Pandemia wywołała bezprecedensowy wzrost podaży pieniądza: M2 YoY osiągnęło **+26.8% w lutym 2021** - efekt bezpośredniego zastrzyku fiskalnego i zerowych stóp. Następnie Fed ograniczył bilans, a M2 YoY spadło do **-4.6% w kwietniu 2023** - pierwszy historyczny spadek podaży pieniądza od dekad. W lipcu 2026 M2 YoY wynosi **+5.4%**, wracając do normy.
 
 ### 4. Rynek pracy - sygnał ostrzegawczy wygasł, brak recesji
 
@@ -69,16 +69,16 @@ Scorecard celowo pyta tylko o cztery rzeczy. Szerszy przegląd ośmiu sygnałów
 
 Realna stopa Fed (FEDFUNDS minus CPI YoY) wynosi +0.28 pp w sierpniu 2026. Po powrocie nad zero w 2023 roku utrzymywała się dodatnia do marca 2026, ale odbicie inflacji zepchnęło ją ponownie poniżej zera w kwietniu i maju (-0.54 pp w maju). Od czerwca jest znów dodatnia, choć blisko granicy. Historycznie 47% miesięcy miało ujemną realną stopę.
 
-### 7. VIX — sentyment rynku
+### 7. VIX - sentyment rynku
 
-VIX (indeks strachu) dodany jako 17. wskaźnik. Aktualnie **15.7** (36. percentyl historyczny) - rynek jest spokojniejszy niż w dwóch trzecich miesięcy od 1990 roku i bardzo daleko od paniki (GFC: 63, COVID: 58). VIX wykazuje silną korelację ze spreadem HY (r=+0.73) i ujemną z S&P500 YoY (r=-0.48).
+VIX (indeks strachu) dodany jako 17. wskaźnik. Aktualnie **16.0** (37. percentyl historyczny) - rynek jest spokojniejszy niż w dwóch trzecich miesięcy od 1990 roku i bardzo daleko od paniki (GFC: 63, COVID: 58). VIX wykazuje silną korelację ze spreadem HY (r=+0.73) i ujemną z S&P500 YoY (r=-0.48).
 
 ### 8. Korelacje wskaźników - redundancja sygnałów
 
 Analiza korelacji 11 kluczowych wskaźników ujawniła, że **żaden z nich nie jest niezależny
 od pozostałych** - każdy ma z czymś korelację o module co najmniej 0,3:
 - **Najsilniejsze pary:** Stopa Fed × Realna stopa (r=+0.77), S&P500 YoY × Spread HY (r=-0.62), VIX × Spread HY (r=+0.73)
-- **Wniosek:** Spread HY i VIX niosą podobną informację (strach rynkowy) — w scorecardzie wystarczy jeden z nich. Yield Curve i bezrobocie (r=+0.71) też są powiązane, ale z różnym opóźnieniem czasowym. Yield Curve × S&P500 YoY (r=+0.52) - stroma krzywa idzie w parze z hossą, co wzmacnia interpretację krzywej jako wskaźnika oczekiwań, a nie tylko sygnału recesji.
+- **Wniosek:** Spread HY i VIX niosą podobną informację (strach rynkowy) - w scorecardzie wystarczy jeden z nich. Yield Curve i bezrobocie (r=+0.71) też są powiązane, ale z różnym opóźnieniem czasowym. Yield Curve × S&P500 YoY (r=+0.52) - stroma krzywa idzie w parze z hossą, co wzmacnia interpretację krzywej jako wskaźnika oczekiwań, a nie tylko sygnału recesji.
 
 ### 9. Timeline inwersji → recesji
 
@@ -86,14 +86,14 @@ Wizualna analiza 4 epizodów inwersji krzywej dochodowości:
 
 | Inwersja | Recesja | Czas |
 |----------|---------|------|
-| 1990-03 – 1990-04 | Gulf War (1990) | 5 mies. |
-| 2000-02 – 2001-01 | Dot-com (2001) | 14 mies. |
-| 2006-02 – 2007-06 | GFC (2008) | 23 mies. |
-| 2022-07 – 2024-09 | **Brak recesji** | — |
+| 1990-03 - 1990-04 | Gulf War (1990) | 5 mies. |
+| 2000-02 - 2001-01 | Dot-com (2001) | 14 mies. |
+| 2006-02 - 2007-06 | GFC (2008) | 23 mies. |
+| 2022-07 - 2024-09 | **Brak recesji** | - |
 
-Średni czas inwersja → recesja: ~14 miesięcy (bez 2022). Ostatnia inwersja (26 miesięcy) nie doprowadziła do recesji — potwierdza tezę o soft landing.
+Średni czas inwersja → recesja: ~14 miesięcy (bez 2022). Ostatnia inwersja (26 miesięcy) nie doprowadziła do recesji - potwierdza tezę o soft landing.
 
-### 10. Model predykcyjny — Logistic Regression
+### 10. Model predykcyjny - Logistic Regression
 
 Model regresji logistycznej przewidujący prawdopodobieństwo recesji w ciągu 12 miesięcy na podstawie 5 zmiennych (yield curve, realna stopa, M2 YoY, bezrobocie, VIX).
 
@@ -143,23 +143,23 @@ z których najstarsza wchodzi do próby tylko częściowo.
 | Ujemna realna stopa | 197 | 10.1% | 11.8% |
 | Dodatnia realna stopa | 220 | 10.1% | 12.2% |
 
-**Wynik:** t = -0.009, **p = 0.9927** → brak podstaw do odrzucenia H₀.
+**Wynik:** t = -0.008, **p = 0.9934** → brak podstaw do odrzucenia H₀.
 
-> **Wniosek:** Wbrew popularnej narracji, ujemna realna stopa Fed **nie przekłada się statystycznie** na wyższe zwroty S&P500 w horyzoncie 12 miesięcy. Różnica średnich wynosi **0.0 pp** - zwroty są nierozróżnialne, a mediana jest nawet nieznacznie wyższa w reżimie dodatniej realnej stopy, co odwraca kierunek popularnej tezy. Inne czynniki — zyski spółek, sentyment, polityka fiskalna — mają większe znaczenie niż sam poziom realnej stopy.
+> **Wniosek:** Wbrew popularnej narracji, ujemna realna stopa Fed **nie przekłada się statystycznie** na wyższe zwroty S&P500 w horyzoncie 12 miesięcy. Różnica średnich wynosi **0.0 pp** - zwroty są nierozróżnialne, a mediana jest nawet nieznacznie wyższa w reżimie dodatniej realnej stopy, co odwraca kierunek popularnej tezy. Inne czynniki - zyski spółek, sentyment, polityka fiskalna - mają większe znaczenie niż sam poziom realnej stopy.
 
 ---
 
 ## Wnioski końcowe
 
-1. **Cykl zacieśnienia 2022–2023 był wyjątkowy** pod względem tempa, skali i braku recesji — gospodarka USA okazała się bardziej odporna niż sugerowały historyczne wzorce.
+1. **Cykl zacieśnienia 2022-2023 był wyjątkowy** pod względem tempa, skali i braku recesji - gospodarka USA okazała się bardziej odporna niż sugerowały historyczne wzorce.
 
-2. **Yield curve przestała być niezawodnym wskaźnikiem recesji** — rekordowa 26-miesięczna inwersja nie poprzedzała recesji w standardowym oknie 12–18 miesięcy.
+2. **Yield curve przestała być niezawodnym wskaźnikiem recesji** - rekordowa 26-miesięczna inwersja nie poprzedzała recesji w standardowym oknie 12-18 miesięcy.
 
 3. **M2 wraca do normy** po epizodzie pandemicznym. Tempo wzrostu +5.4% YoY nie sygnalizuje ani deflacyjnej pułapki, ani inflacyjnego przegrzania.
 
-4. **Rynek pracy pozostaje kluczową zmienną do obserwacji** — sygnał ostrzegawczy z przełomu 2025 i 2026 wygasł, Sahm Rule wróciła do zera. Jej ponowne przekroczenie 0.5 pp byłoby pierwszym silnym sygnałem recesyjnym.
+4. **Rynek pracy pozostaje kluczową zmienną do obserwacji** - sygnał ostrzegawczy z przełomu 2025 i 2026 wygasł, Sahm Rule wróciła do zera. Jej ponowne przekroczenie 0.5 pp byłoby pierwszym silnym sygnałem recesyjnym.
 
-5. **Statystyczna analiza podważa intuicje** — korelacja realna stopa / zwroty giełdowe jest słaba i nieistotna. Inwestowanie na podstawie samego poziomu stóp to uproszczenie.
+5. **Statystyczna analiza podważa intuicje** - różnica średnich zwrotów S&P500 między reżimem ujemnej i dodatniej realnej stopy jest nieistotna statystycznie (test t Welcha, p = 0.9934). Testowana była różnica średnich, nie korelacja - współczynnika korelacji dla tej pary nie liczyłem. Inwestowanie na podstawie samego poziomu stóp to uproszczenie.
 
 ---
 
