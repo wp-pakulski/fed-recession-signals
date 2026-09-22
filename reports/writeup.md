@@ -69,6 +69,26 @@ Scorecard celowo pyta tylko o cztery rzeczy. Szerszy przegląd ośmiu sygnałów
 
 Realna stopa Fed (FEDFUNDS minus CPI YoY) wynosi +0.28 pp w sierpniu 2026. Po powrocie nad zero w 2023 roku utrzymywała się dodatnia do marca 2026, ale odbicie inflacji zepchnęło ją ponownie poniżej zera w kwietniu i maju (-0.54 pp w maju). Od czerwca jest znów dodatnia, choć blisko granicy. Historycznie 47% miesięcy miało ujemną realną stopę.
 
+### 6b. Obniżki stóp Fed i zwroty S&P500
+
+Grupowanie 427 miesięcy po kierunku zmiany stopy Fed i policzenie średniego zwrotu indeksu
+w kolejnych 12 miesiącach:
+
+| Decyzja Fed | Miesięcy | Średni zwrot 12M |
+|---|---|---|
+| Podwyżka stóp | 190 | 11.7% |
+| Brak zmiany | 82 | 11.2% |
+| Obniżka stóp | 155 | 7.7% |
+
+Obniżki wypadają najgorzej i to jest spójne z wnioskiem o realnej stopie: luźna polityka
+nie jest sama z siebie paliwem dla rynku. Fed obniża w reakcji na słabnącą gospodarkę,
+więc obniżka współwystępuje z tym, co rynkowi szkodzi.
+
+To samo zapytanie przed naprawą serii S&P500 dawało 112 miesięcy i odwrotną kolejność
+reżimów - w bazie siedziała 10-letnia seria z FRED zamiast pełnej historii z Yahoo Finance.
+Wniosek odwrócił się po poszerzeniu próby o 315 miesięcy, co jest dobrą ilustracją tego,
+ile zależy od samego zakresu danych.
+
 ### 7. VIX - sentyment rynku
 
 VIX (indeks strachu) dodany jako 17. wskaźnik. Aktualnie **16.0** (37. percentyl historyczny) - rynek jest spokojniejszy niż w dwóch trzecich miesięcy od 1990 roku i bardzo daleko od paniki (GFC: 63, COVID: 58). VIX wykazuje silną korelację ze spreadem HY (r=+0.73) i ujemną z S&P500 YoY (r=-0.48).

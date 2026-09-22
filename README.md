@@ -22,18 +22,26 @@ wynosi **10,1% w obu reżimach**, `t = -0,008`, **`p = 0,993`**. Różnica jest 
 od zera, a mediana jest nawet nieco wyższa przy dodatniej realnej stopie.
 Hipoteza, poziom istotności i naruszone założenie testu: [Metoda i walidacja](#metoda-i-walidacja).
 
-**2. Rekordowa inwersja krzywej nie zapowiedziała recesji.** Spread 10Y-2Y był ujemny przez
+**2. Obniżki stóp Fed nie napędzają giełdy - wypadają najgorzej z trzech reżimów.**
+W 12 miesięcy po obniżce S&P500 rośnie średnio o **7,7%**, po podwyżce o **11,7%**,
+przy braku zmian o 11,2% (427 miesięcy, 1990-2026). Mechanizm jest odwrotny do intuicji:
+Fed obniża, gdy gospodarka słabnie, więc obniżka jest objawem problemu, a nie prezentem
+dla rynku. To zapytanie dawało wcześniej przeciwną kolejność reżimów, bo w bazie siedziała
+10-letnia seria S&P500 zamiast pełnej - policzone na 112 miesiącach zamiast 427.
+Zapytanie: [`sql/03_fed_a_rynki.sql`](sql/03_fed_a_rynki.sql).
+
+**3. Rekordowa inwersja krzywej nie zapowiedziała recesji.** Spread 10Y-2Y był ujemny przez
 **26 kolejnych miesięcy** (lipiec 2022 - sierpień 2024) - najdłużej w całej analizowanej
 historii. Recesja nie nastąpiła. Trzy wcześniejsze inwersje poprzedzały recesję średnio
 o 14 miesięcy.
 
-**3. Połowa popularnych wskaźników recesji nie wyprzedza recesji.** Przy kalibracji progów
+**4. Połowa popularnych wskaźników recesji nie wyprzedza recesji.** Przy kalibracji progów
 na rozkładzie historycznym okazało się, że **Sahm Rule, spread HY i wnioski o zasiłek**
 mają w oknie 12 miesięcy przed recesją niemal identyczny rozkład co w spokojnych czasach -
 rosną dopiero w jej trakcie. Realnie wyprzedzają tylko krzywa dochodowości (mediana 0,12
 wobec 1,05) i pozwolenia budowlane (-5,1% wobec +4,5%).
 
-**4. Model uczony in-sample potrafi mylić fazę cyklu z przyczyną.** Regresja logistyczna
+**5. Model uczony in-sample potrafi mylić fazę cyklu z przyczyną.** Regresja logistyczna
 osiąga ROC AUC **0,819**, ale współczynnik przy bezrobociu jest **ujemny**: model odczytuje
 wysokie bezrobocie jako „dołek już za nami", bo rośnie ono najmocniej *w trakcie* recesji,
 a zmienna objaśniana pyta o *następne* 12 miesięcy. Przy czterech recesjach w próbie nie ma
@@ -100,12 +108,28 @@ wynik nie zależy od tego, w jakiej kolejności je odpalisz.
 
 Baza `data/fed_cycles.db` nie jest wersjonowana - powstaje z plików w `data/raw/`.
 
+Zapytania analityczne da się odpalić bez Pythona, wprost na gotowej bazie:
+
+```bash
+sqlite3 -header -column data/fed_cycles.db < sql/02_sygnaly_recesyjne.sql
+```
+
+| Plik | Zawartość |
+|---|---|
+| `sql/01_baza_i_widoki.sql` | schemat `raw_series`, `dim_recession`, widok `v_master` (format długi na szeroki przez `MAX(CASE WHEN ...)`) plus trzy zapytania kontrolne |
+| `sql/02_sygnaly_recesyjne.sql` | krzywa dochodowości, epizody inwersji techniką gaps and islands, Sahm Rule na oknie kroczącym, czas trwania recesji, warunki makro rok przed nią |
+| `sql/03_fed_a_rynki.sql` | M2 przed recesją, realna stopa per dekada, zwroty S&P500 po decyzjach Fed, spadek indeksu w recesji, stan bieżący |
+
+Każde zapytanie ma nad sobą pytanie, na które odpowiada, i wniosek z liczbami z jego
+własnego wyniku. Liczby w komentarzach sprawdzone przez uruchomienie plików na bazie.
+
 ---
 
 ## Struktura
 
 ```
 notebooks/    pięć notebooków, pełny łańcuch od pobrania danych do analizy
+sql/          model danych i 10 zapytań analitycznych, każde z komentarzem PYTANIE/WNIOSEK
 scripts/      sygnaly_recesyjne.py - generator raportu
 data/raw/     17 plików CSV: dane źródłowe z FRED i Yahoo Finance
 reports/      writeup, raport sygnałów, słownik wskaźników, 9 wykresów, dashboard HTML
@@ -142,7 +166,7 @@ Dwa ograniczenia warte odnotowania:
 
 ## Metoda i walidacja
 
-Cztery wnioski powyżej opierają się na różnych narzędziach i mają różną siłę dowodową.
+Wnioski powyżej opierają się na różnych narzędziach i mają różną siłę dowodową.
 Poniżej wprost, które jest które.
 
 **Test hipotezy (wniosek 1).** Test t Welcha dla dwóch prób o nierównych wariancjach,
@@ -175,7 +199,7 @@ spread HY x VIX r = +0,73, krzywa dochodowości x bezrobocie r = +0,71.
 od pozostałych. To wynik opisowy, nie test: część korelacji na poziomach jest zawyżona
 wspólnym trendem, a stacjonarności serii nie badałem (brak testu ADF).
 
-**Model klasyfikacyjny (wniosek 4).** Regresja logistyczna, `StandardScaler`,
+**Model klasyfikacyjny (wniosek 5).** Regresja logistyczna, `StandardScaler`,
 `class_weight='balanced'`, 416 miesięcy, zmienna objaśniana = recesja w ciągu
 następnych 12 miesięcy (63 przypadki, 15,1% próby).
 
@@ -185,14 +209,14 @@ następnych 12 miesięcy (63 przypadki, 15,1% próby).
   wykrywalność kosztem fałszywych alarmów
 - współczynniki standaryzowane nie są interpretowalne przyczynowo: przy korelacjach
   rzędu 0,7 między zmiennymi objaśniającymi znaki rozkładają się arbitralnie,
-  co widać na ujemnym współczynniku przy bezrobociu (wniosek 4)
+  co widać na ujemnym współczynniku przy bezrobociu (wniosek 5)
 
 AUC 0,819 in-sample nie jest miarą zdolności prognostycznej. Uczciwa ocena wymaga
 podziału po czasie, a przy czterech recesjach w próbie każdy podział zostawia
 w zbiorze testowym najwyżej jedną - dlatego model jest w projekcie ilustracją metody,
 nie prognozą.
 
-**Progi wskaźników (wniosek 3).** Kalibracja na rozkładzie historycznym: porównanie
+**Progi wskaźników (wniosek 4).** Kalibracja na rozkładzie historycznym: porównanie
 median w oknie 12 miesięcy przed recesją z pozostałymi okresami. Bez testu istotności -
 przy tak małej liczbie recesji i ośmiu wskaźnikach kontrola porównań wielokrotnych
 zabrałaby i tak całą moc. Ten wniosek traktować jako obserwację z danych, nie wynik testu.
